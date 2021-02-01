@@ -55,7 +55,19 @@ public class Open_Addressing {
      */
     public int insertKey(int key) {
         // TODO : implement this and change the return statement.
-        return -1;
+        int collisions = 0;
+        int i = 0;
+        while (i < m) {
+            int index = probe(key, i);
+            if (this.Table[index] == -1) {
+                this.Table[index] = key;
+                break;
+            }
+            i += 1;
+            collisions += 1;
+        }
+
+        return collisions;
     }
 
     /**
