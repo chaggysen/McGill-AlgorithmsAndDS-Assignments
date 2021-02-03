@@ -6,12 +6,20 @@ public class a1_real {
 
 	public static int silence(int[] positions) {
 		// create hash table. Position is key and index is value
+		HashMap<Integer, Integer> mp = new HashMap<Integer, Integer>();
+		int minDist = positions.length;
 
 		// iterate through positions array, check if exist in hashtable
-		// if yes: distance = curIdx - hashmap.get(positions[curIdx])
-		// if no: store into hashTable. position[index] is key and index is value
+		for (int i = 0; i < positions.length; i++) {
+			if (mp.containsKey(positions[i])) {
+				int distance = i - mp.get(positions[i]);
+				minDist = Math.min(distance, minDist);
+			} else {
+				mp.put(positions[i], i);
+			}
+		}
 
-		// return len(positions)
+		return minDist;
 	}
 
 	public static void main(String[] args) {
