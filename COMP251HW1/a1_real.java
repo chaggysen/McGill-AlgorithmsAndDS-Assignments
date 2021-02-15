@@ -18,7 +18,6 @@ public class a1_real {
 				mp.put(positions[i], i);
 			}
 		}
-
 		return minDist;
 	}
 
