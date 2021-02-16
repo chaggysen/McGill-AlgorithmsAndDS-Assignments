@@ -98,7 +98,7 @@ public class Game {
 					// get the region length
 					int regionLength = Game.getRegionLength(row, col, sudoku);
 					// iterate all possible values and check ifPossible
-					for (int value = 0; value < regionLength; value++) {
+					for (int value = 1; value <= regionLength; value++) {
 						// if possible, assign value and call solver() recursively
 						if (isPossible(sudoku, value, row, col)) {
 							sudoku.setValue(row, col, value);
