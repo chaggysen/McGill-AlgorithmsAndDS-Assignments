@@ -5,6 +5,7 @@ import java.io.*;
 public class Game {
 
 	Board sudoku;
+	private static Boolean solved = false;
 
 	public class Cell {
 		private int row = 0;
@@ -91,39 +92,98 @@ public class Game {
 	public int[][] solver() {
 		// To Do => Please start coding your solution here
 		// iterate the board and check for empty cells
-		for (int row = 0; row < sudoku.getValues().length; row++) {
-			for (int col = 0; col < sudoku.getValues()[row].length; col++) {
+		for (int row = 0; row < sudoku.num_rows; row++) {
+			for (int col = 0; col < sudoku.num_columns; col++) {
 				// found an empty cell
 				if (sudoku.getValues()[row][col] == -1) {
 					// get the region length
 					int regionLength = Game.getRegionLength(row, col, sudoku);
+					// System.out.println(regionLength);
 					// iterate all possible values and check ifPossible
 					for (int value = 1; value <= regionLength; value++) {
 						// if possible, assign value and call solver() recursively
 						if (isPossible(sudoku, value, row, col)) {
+							System.out.println("Value " + value + " is possible at row " + row + " and col " + col);
 							sudoku.setValue(row, col, value);
 							solver();
 							// previous call was not possible, backtrack
-							sudoku.setValue(row, col, -1);
+							if (!solved) {
+								sudoku.setValue(row, col, -1);
+							}
+							// sudoku.setValue(row, col, -1);
 						}
 					}
+					System.out.println("Run out of values, backtracking...");
 					// not possible, return
 					return sudoku.getValues();
 				}
 			}
 		}
+		System.out.println("Finished algorithm");
+		solved = true;
 		return sudoku.getValues();
 	}
 
 	private static int getRegionLength(int row, int col, Board currentBoard) {
-		// TODO
+		// perform binary Search?
+		for (int i = 0; i < currentBoard.getRegions().length; i++) {
+			for (int j = 0; j < currentBoard.getRegions()[i].getCells().length; j++) {
+				if ((currentBoard.getRegions()[i].getCells()[j].getRow() == row)
+						&& (currentBoard.getRegions()[i].getCells()[j].getColumn() == col)) {
+					return currentBoard.getRegions()[i].num_cells;
+				}
+			}
+		}
 		return 0;
 	}
 
-	// method isPossible
 	private static Boolean isPossible(Board currentBoard, int value, int row, int col) {
-		// TODO
-		return false;
+		Boolean isValid = true;
+		// check for adjacent values
+		int rows = currentBoard.num_rows;
+		int cols = currentBoard.num_columns;
+		// iterate each adjacent row and col
+		for (int j = row - 1; j <= row + 1; j++) {
+			for (int i = col - 1; i <= col + 1; i++) {
+				// cehck if at the border of matrix and check if it's the row and col itself
+				if (i >= 0 && j >= 0 && i < cols && j < rows && !(j == row && i == col)) {
+					if (currentBoard.getValue(j, i) == value) {
+						isValid = false;
+						return isValid;
+					}
+				}
+			}
+		}
+		// check for same region
+		for (int i = 0; i < currentBoard.getRegions().length; i++) {
+			Boolean seen = false;
+			Boolean isCurrentRegion = false;
+			for (int j = 0; j < currentBoard.getRegion(i).getCells().length; j++) {
+				// if we got to the cell itself
+				if (currentBoard.getRegion(i).getCells()[j].getRow() == row
+						&& currentBoard.getRegion(i).getCells()[j].getColumn() == col) {
+					// seen value before, not valid
+					if (seen) {
+						isValid = false;
+						return isValid;
+						// store that we are at the interested region
+					} else {
+						isCurrentRegion = true;
+					}
+					// we are at the interested reggion and we see the same value, not valid
+				} else if (currentBoard.getValue(currentBoard.getRegion(i).getCells()[j].getRow(),
+						currentBoard.getRegion(i).getCells()[j].getColumn()) == value && isCurrentRegion) {
+					isValid = false;
+					return isValid;
+					// we see the value but we don't know if we are at the intrerested region yet,
+					// set seen to true
+				} else if (currentBoard.getValue(currentBoard.getRegion(i).getCells()[j].getRow(),
+						currentBoard.getRegion(i).getCells()[j].getColumn()) == value) {
+					seen = true;
+				}
+			}
+		}
+		return isValid;
 	}
 
 	public static void main(String[] args) {
