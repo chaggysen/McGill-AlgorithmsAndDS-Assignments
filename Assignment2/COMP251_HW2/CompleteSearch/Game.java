@@ -5,7 +5,6 @@ import java.io.*;
 public class Game {
 
 	Board sudoku;
-	private static Boolean solved = false;
 
 	public class Cell {
 		private int row = 0;
@@ -90,8 +89,11 @@ public class Game {
 	}
 
 	public int[][] solver() {
-		// To Do => Please start coding your solution here
-		// iterate the board and check for empty cells
+		solverHelper();
+		return sudoku.getValues();
+	}
+
+	private Boolean solverHelper() {
 		for (int row = 0; row < sudoku.num_rows; row++) {
 			for (int col = 0; col < sudoku.num_columns; col++) {
 				// found an empty cell
@@ -102,26 +104,23 @@ public class Game {
 					// iterate all possible values and check ifPossible
 					for (int value = 1; value <= regionLength; value++) {
 						// if possible, assign value and call solver() recursively
-						if (isPossible(sudoku, value, row, col)) {
+						System.out.println("Setting Value " + value + " at row " + row + " and col " + col);
+						sudoku.setValue(row, col, value);
+						if (isPossible(sudoku, value, row, col) && solverHelper()) {
 							System.out.println("Value " + value + " is possible at row " + row + " and col " + col);
-							sudoku.setValue(row, col, value);
-							solver();
-							// previous call was not possible, backtrack
-							if (!solved) {
-								sudoku.setValue(row, col, -1);
-							}
-							// sudoku.setValue(row, col, -1);
+							return true;
 						}
+						sudoku.setValue(row, col, -1);
 					}
 					System.out.println("Run out of values, backtracking...");
 					// not possible, return
-					return sudoku.getValues();
+					return false;
 				}
 			}
 		}
 		System.out.println("Finished algorithm");
-		solved = true;
-		return sudoku.getValues();
+		return true;
+
 	}
 
 	private static int getRegionLength(int row, int col, Board currentBoard) {
