@@ -19,13 +19,13 @@ def find_min(array, start, end, prev_jump):
     if start == 0 and prev_jump == 0:
         sum = forward
         if memo[prev_jump][start] != float("inf"):
-            memo[prev_jump][start] = min(memo[start], sum)
+            memo[prev_jump][start] = min(memo[prev_jump][start], sum)
         else:
             memo[prev_jump][start] = sum
     else:
         sum = path + array[start]
         if memo[prev_jump][start] != float("inf"):
-            memo[prev_jump][start] = min(memo[start], sum)
+            memo[prev_jump][start] = min(memo[prev_jump][start], sum)
         else:
             memo[prev_jump][start] = sum
     # memo[start] = min(memo[start], sum)
