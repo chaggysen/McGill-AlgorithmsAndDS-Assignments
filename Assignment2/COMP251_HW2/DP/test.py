@@ -1,12 +1,12 @@
+memo = [[float("inf") for i in range(6)] for j in range(6)]
+print(memo)
+
+
 def find_min(array, start, end, prev_jump):
-    # print("start " + str(start))
-    # print("end " + str(end))
-    # print("prev_jump " + str(prev_jump))
-    # print("===========")
-    if start < 0 or start > end:
+    if start < 0 or start > end or end >= len(array):
         return float("inf")
-    if end >= len(array):
-        return float("inf")
+    if memo[prev_jump][start] != float("inf"):
+        return memo[prev_jump][start]
     if start == end:
         return array[end]
     cur_jump = prev_jump + 1
@@ -15,21 +15,21 @@ def find_min(array, start, end, prev_jump):
         backward = find_min(array, start - prev_jump, end, prev_jump)
     else:
         backward = float("inf")
-    if forward < backward:
-        if start == 0 and prev_jump == 0:
-            sum = forward
+    path = min(forward, backward)
+    if start == 0 and prev_jump == 0:
+        sum = forward
+        if memo[prev_jump][start] != float("inf"):
+            memo[prev_jump][start] = min(memo[start], sum)
         else:
-            sum = forward + array[start]
-            # print("sum using forward")
-            # print("sum " + str(sum))
-    elif backward < forward:
-        if start == 0 and prev_jump == 0:
-            sum = forward
+            memo[prev_jump][start] = sum
+    else:
+        sum = path + array[start]
+        if memo[prev_jump][start] != float("inf"):
+            memo[prev_jump][start] = min(memo[start], sum)
         else:
-            sum = backward + array[start]
-            # print("sum using backward")
-            # print("sum " + str(sum))
-    return sum
+            memo[prev_jump][start] = sum
+    # memo[start] = min(memo[start], sum)
+    return memo[prev_jump][start]
 
 
 arr = [1, 2, 3, 4, 5, 6]
