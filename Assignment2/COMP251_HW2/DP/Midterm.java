@@ -29,11 +29,7 @@ public class Midterm {
 		int start = 0;
 		int end = penalization.length - 1;
 		int prevJump = 0;
-		for (int i = 0; i < penalization.length; i++) {
-			for (int j = 0; j < penalization.length; j++) {
-				dp_table[i][j] = 0;
-			}
-		}
+		dp_table = new int[penalization.length][penalization.length];
 		return lost_marks_helper(penalization, start, end, prevJump); // placeholder
 	}
 
