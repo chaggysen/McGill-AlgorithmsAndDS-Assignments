@@ -22,7 +22,6 @@ public class HW_Sched {
 	 *         at time i.
 	 */
 	public int[] SelectAssignments() {
-		// TODO Implement this
 
 		// Sort assignments
 		// Order will depend on how compare function is implemented
@@ -35,17 +34,18 @@ public class HW_Sched {
 		for (int i = 0; i < homeworkPlan.length; ++i) {
 			homeworkPlan[i] = -1;
 		}
-
-		for (int i = 0; i < Assignments.size(); i++) {
+		int assignmentsSize = Assignments.size();
+		for (int i = 0; i < assignmentsSize; i++) {
 			int deadline = Assignments.get(i).deadline - 1;
+			int assignmentNumber = Assignments.get(i).number;
 			// the day before the deadline is empty
 			if (homeworkPlan[deadline] == -1) {
-				homeworkPlan[Assignments.get(i).deadline - 1] = Assignments.get(i).number;
+				homeworkPlan[deadline] = assignmentNumber;
 			} else {
 				// the day before the dealine is taken. Check for previous days
-				for (int j = Assignments.get(i).deadline - 1; j >= 0; j--) {
+				for (int j = deadline; j >= 0; j--) {
 					if (homeworkPlan[j] == -1) {
-						homeworkPlan[j] = Assignments.get(i).number;
+						homeworkPlan[j] = assignmentNumber;
 					}
 				}
 			}
