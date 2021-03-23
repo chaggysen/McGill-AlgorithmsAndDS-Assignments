@@ -22,7 +22,6 @@ public class Honors {
 	}
 
 	public static int min_moves(int[][] board) {
-		System.out.println("Starting bfs");
 		int[][] distance = new int[board.length][board[0].length];
 		boolean[][] visited = new boolean[board.length][board[0].length];
 		Queue<Node> queue = new LinkedList<Node>();
@@ -33,9 +32,8 @@ public class Honors {
 		queue.add(startNode);
 
 		while (!queue.isEmpty()) {
-			// do BFS
 			Node currentNode = queue.poll();
-			System.out.println(currentNode.row + "," + currentNode.col);
+			// System.out.println(currentNode.row + "," + currentNode.col);
 			int curMoves = board[currentNode.row][currentNode.col];
 
 			// append adjancent nodes to Queue
@@ -98,7 +96,7 @@ public class Honors {
 		int[][] board = { { 2, 1, 2, 0 }, { 1, 2, 0, 3 }, { 3, 1, 1, 3 }, { 1, 1, 2, 0 }, { 1, 1, 1, 0 } }; // not
 		// actual
 		// example
-		// int[][] board = { { 2, 2 }, { 2, 2 } };
+		// int[][] board = { { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
 		int answer = min_moves(board);
 		System.out.println(answer);
 	}
