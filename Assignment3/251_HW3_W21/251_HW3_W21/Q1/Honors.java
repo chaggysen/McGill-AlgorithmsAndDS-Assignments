@@ -66,7 +66,7 @@ public class Honors {
 			}
 		}
 		return distance[board.length - 1][board[0].length - 1] == 0 ? -1
-				: distance[board.length - 1][board[0].length - 1]; // placeholder
+				: distance[board.length - 1][board[0].length - 1];
 	}
 
 	public void test(String filename) throws FileNotFoundException {

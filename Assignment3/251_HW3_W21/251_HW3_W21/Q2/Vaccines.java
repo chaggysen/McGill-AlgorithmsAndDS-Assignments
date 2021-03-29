@@ -77,9 +77,11 @@ public class Vaccines {
 		// inititalize data
 		int safeContries = graph.length;
 		boolean[] lockdown = new boolean[graph.length];
+		boolean[] visited = new boolean[graph.length];
 		Queue<Integer> queue = new LinkedList<Integer>();
 		// country 1 goes to lockdown
 		lockdown[0] = true;
+		visited[0] = true;
 		queue.add(0);
 
 		while (!queue.isEmpty()) {
@@ -95,6 +97,7 @@ public class Vaccines {
 					graph[allyIdx].set_vaccines_to_receive(newAllyVaccineToReceive);
 					if (!lockdown[allyIdx]) {
 						queue.add(allyIdx);
+						visited[allyIdx] = true;
 					}
 				}
 			} else {
@@ -102,8 +105,9 @@ public class Vaccines {
 				if (graph[currentIndex].get_vaccine_threshold() <= graph[currentIndex].get_vaccines_to_receive()) {
 					for (int i = 0; i < graph[currentIndex].get_num_allies(); i++) {
 						int allyIdx = graph[currentIndex].get_allies_ID(i) - 1;
-						if (!lockdown[allyIdx]) {
+						if (!lockdown[allyIdx] && !visited[allyIdx]) {
 							queue.add(allyIdx);
+							visited[allyIdx] = true;
 						}
 					}
 				} else {
@@ -120,18 +124,13 @@ public class Vaccines {
 								int newAllyVaccineToReceive = currentAllyVaccineToReceive - allyVaccine;
 								graph[allyIdx].set_vaccines_to_receive(newAllyVaccineToReceive);
 								queue.add(allyIdx);
+								visited[allyIdx] = true;
 							}
 						}
 					}
 				}
 			}
 		}
-
-		// for (int i = 0; i < lockdown.length; i++) {
-		// if (!lockdown[i]) {
-		// safeContries += 1;
-		// }
-		// }
 
 		return safeContries - 1;
 	}
