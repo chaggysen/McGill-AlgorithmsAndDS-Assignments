@@ -75,7 +75,7 @@ public class Vaccines {
 	public int vaccines(Country[] graph) {
 
 		// inititalize data
-		int safeContries = 0;
+		int safeContries = graph.length;
 		boolean[] lockdown = new boolean[graph.length];
 		Queue<Integer> queue = new LinkedList<Integer>();
 		// country 1 goes to lockdown
@@ -93,7 +93,9 @@ public class Vaccines {
 					int currentAllyVaccineToReceive = graph[allyIdx].get_vaccines_to_receive();
 					int newAllyVaccineToReceive = currentAllyVaccineToReceive - allyVaccine;
 					graph[allyIdx].set_vaccines_to_receive(newAllyVaccineToReceive);
-					queue.add(allyIdx);
+					if (!lockdown[allyIdx]) {
+						queue.add(allyIdx);
+					}
 				}
 			} else {
 				// current country has enough vaccines
@@ -108,6 +110,7 @@ public class Vaccines {
 					// not enough vaccine and not in lockdown yet
 					if (!lockdown[currentIndex]) {
 						lockdown[currentIndex] = true;
+						safeContries -= 1;
 						for (int i = 0; i < graph[currentIndex].get_num_allies(); i++) {
 							int allyIdx = graph[currentIndex].get_allies_ID(i) - 1;
 							if (!lockdown[allyIdx]) {
@@ -124,13 +127,13 @@ public class Vaccines {
 			}
 		}
 
-		for (int i = 0; i < lockdown.length; i++) {
-			if (!lockdown[i]) {
-				safeContries += 1;
-			}
-		}
+		// for (int i = 0; i < lockdown.length; i++) {
+		// if (!lockdown[i]) {
+		// safeContries += 1;
+		// }
+		// }
 
-		return safeContries;
+		return safeContries - 1;
 	}
 
 	public void test(String filename) throws FileNotFoundException {
