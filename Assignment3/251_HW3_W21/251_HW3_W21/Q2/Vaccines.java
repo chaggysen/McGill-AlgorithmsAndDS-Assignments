@@ -73,19 +73,18 @@ public class Vaccines {
 	}
 
 	public int vaccines(Country[] graph) {
-		// Computing the exceed in vaccines per country.
-		// the country ID = i + 1
-		// thus i = country ID - 1
-		// fist country decide to stop sharing Vaccines
-		// TODO: do second BFS to check for sate countries
+
+		// inititalize data
 		int safeContries = 0;
 		boolean[] lockdown = new boolean[graph.length];
 		Queue<Integer> queue = new LinkedList<Integer>();
+		// country 1 goes to lockdown
 		lockdown[0] = true;
 		queue.add(0);
 
 		while (!queue.isEmpty()) {
 			int currentIndex = queue.poll();
+			// append country 1's neighbors
 			if (currentIndex == 0) {
 				for (int i = 0; i < graph[currentIndex].get_num_allies(); i++) {
 					int allyIdx = graph[currentIndex].get_allies_ID(i) - 1;
@@ -106,6 +105,7 @@ public class Vaccines {
 						}
 					}
 				} else {
+					// not enough vaccine and not in lockdown yet
 					if (!lockdown[currentIndex]) {
 						lockdown[currentIndex] = true;
 						for (int i = 0; i < graph[currentIndex].get_num_allies(); i++) {
@@ -120,41 +120,9 @@ public class Vaccines {
 							}
 						}
 					}
-					// lockdown[currentIndex] = true;
-					// for (int i = 0; i < graph[currentIndex].get_num_allies(); i++) {
-					// int allyIdx = graph[currentIndex].get_allies_ID(i) - 1;
-					// if (!lockdown[allyIdx]) {
-					// int allyVaccine = graph[currentIndex].get_allies_vaccine(i);
-					// // reduce ally's vaccine to receive
-					// int currentAllyVaccineToReceive = graph[allyIdx].get_vaccines_to_receive();
-					// int newAllyVaccineToReceive = currentAllyVaccineToReceive - allyVaccine;
-					// graph[allyIdx].set_vaccines_to_receive(newAllyVaccineToReceive);
-					// queue.add(allyIdx);
-					// }
-					// }
 				}
 			}
 		}
-
-		// boolean[] visited2 = new boolean[graph.length];
-		// Queue<Integer> queue2 = new LinkedList<Integer>();
-		// visited2[0] = true;
-		// queue2.add(0);
-
-		// while (!queue2.isEmpty()) {
-		// int currentIdx = queue2.poll();
-		// if (graph[currentIdx].get_vaccine_threshold() <=
-		// graph[currentIdx].get_vaccines_to_receive()) {
-		// safeContries += 1;
-		// }
-		// for (int i = 0; i < graph[currentIdx].get_num_allies(); i++) {
-		// int allyidx = graph[currentIdx].get_allies_ID(i) - 1;
-		// if (!visited2[allyidx]) {
-		// queue2.add(allyidx);
-		// visited2[allyidx] = true;
-		// }
-		// }
-		// }
 
 		for (int i = 0; i < lockdown.length; i++) {
 			if (!lockdown[i]) {
