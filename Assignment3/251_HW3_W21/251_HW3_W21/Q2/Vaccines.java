@@ -88,29 +88,35 @@ public class Vaccines {
 			int currentIndex = queue.poll();
 			// append country 1's neighbors
 			if (currentIndex == 0) {
+				// System.out.println("Strting with Country 1");
 				for (int i = 0; i < graph[currentIndex].get_num_allies(); i++) {
 					int allyIdx = graph[currentIndex].get_allies_ID(i) - 1;
-					int allyVaccine = graph[currentIndex].get_allies_vaccine(i);
-					// reduce ally's vaccine to receive
-					int currentAllyVaccineToReceive = graph[allyIdx].get_vaccines_to_receive();
-					int newAllyVaccineToReceive = currentAllyVaccineToReceive - allyVaccine;
-					graph[allyIdx].set_vaccines_to_receive(newAllyVaccineToReceive);
 					if (!lockdown[allyIdx]) {
+						int allyVaccine = graph[currentIndex].get_allies_vaccine(i);
+						// reduce ally's vaccine to receive
+						int currentAllyVaccineToReceive = graph[allyIdx].get_vaccines_to_receive();
+						int newAllyVaccineToReceive = currentAllyVaccineToReceive - allyVaccine;
+						graph[allyIdx].set_vaccines_to_receive(newAllyVaccineToReceive);
+
 						queue.add(allyIdx);
 						visited[allyIdx] = true;
+						// System.out.println("Added allyIdx " + allyIdx);
 					}
 				}
 			} else {
 				// current country has enough vaccines
 				if (graph[currentIndex].get_vaccine_threshold() <= graph[currentIndex].get_vaccines_to_receive()) {
+					// System.out.println("Country with id (enough vaccine)" + currentIndex);
 					for (int i = 0; i < graph[currentIndex].get_num_allies(); i++) {
 						int allyIdx = graph[currentIndex].get_allies_ID(i) - 1;
 						if (!lockdown[allyIdx] && !visited[allyIdx]) {
 							queue.add(allyIdx);
 							visited[allyIdx] = true;
+							// System.out.println("Added allyIdx " + allyIdx);
 						}
 					}
 				} else {
+					// System.out.println("Country with id (not enough vaccine)" + currentIndex);
 					// not enough vaccine and not in lockdown yet
 					if (!lockdown[currentIndex]) {
 						lockdown[currentIndex] = true;
@@ -125,6 +131,7 @@ public class Vaccines {
 								graph[allyIdx].set_vaccines_to_receive(newAllyVaccineToReceive);
 								queue.add(allyIdx);
 								visited[allyIdx] = true;
+								// System.out.println("Added allyIdx " + allyIdx);
 							}
 						}
 					}
