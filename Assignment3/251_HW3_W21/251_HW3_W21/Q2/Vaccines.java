@@ -95,7 +95,7 @@ public class Vaccines {
 					int currentAllyVaccineToReceive = graph[allyIdx].get_vaccines_to_receive();
 					int newAllyVaccineToReceive = currentAllyVaccineToReceive - allyVaccine;
 					graph[allyIdx].set_vaccines_to_receive(newAllyVaccineToReceive);
-					if (!lockdown[allyIdx]) {
+					if (!lockdown[allyIdx] && !visited[allyIdx]) {
 						queue.add(allyIdx);
 						visited[allyIdx] = true;
 					}

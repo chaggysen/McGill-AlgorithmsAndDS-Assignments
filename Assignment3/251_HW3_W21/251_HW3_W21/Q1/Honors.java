@@ -87,18 +87,17 @@ public class Honors {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException {
-		System.out.println("Starting");
-		// Honors honors = new Honors();
-		// honors.test(args[0]); // run 'javac Honors.java' to compile, then run 'java
-		// Honors testfilename'
+		Honors honors = new Honors();
+		honors.test(args[0]); // run 'javac Honors.java' to compile, then run 'java Honors testfilename'
 
 		// or you can test like this
-		int[][] board = { { 2, 1, 2, 0 }, { 1, 2, 0, 3 }, { 3, 1, 1, 3 }, { 1, 1, 2, 0 }, { 1, 1, 1, 0 } }; // not
+		// int[][] board = { { 2, 1, 2, 0 }, { 1, 2, 0, 3 }, { 3, 1, 1, 3 }, { 1, 1, 2,
+		// 0 }, { 1, 1, 1, 0 } }; // not
 		// actual
 		// example
 		// int[][] board = { { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
-		int answer = min_moves(board);
-		System.out.println(answer);
+		// int answer = min_moves(board);
+		// System.out.println(answer);
 	}
 
 }
