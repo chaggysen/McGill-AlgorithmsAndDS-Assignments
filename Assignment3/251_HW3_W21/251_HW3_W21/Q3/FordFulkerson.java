@@ -47,7 +47,63 @@ public class FordFulkerson {
 		String answer = "";
 		int maxFlow = 0;
 
-		/* YOUR CODE GOES HERE */
+		// initialize variables
+		int source = graph.getSource();
+		int destination = graph.getDestination();
+
+		// initialize residual graph
+		WGraph residualGraph = new WGraph(graph);
+
+		// add backward edges to residual graph
+		for (Edge edge : graph.getEdges()) {
+			Edge backwardEdge = new Edge(edge.nodes[1], edge.nodes[0], 0);
+			if (graph.getEdge(edge.nodes[1], edge.nodes[0]) == null) {
+				residualGraph.addEdge(backwardEdge);
+			}
+		}
+
+		// calculate path
+		ArrayList<Integer> currentPath = pathDFS(source, destination, residualGraph);
+		if (currentPath.size() == 0) {
+			maxFlow = -1;
+		}
+
+		// Update flow while there is a path from source to destination in residualGraph
+		while (currentPath.size() > 0) {
+			int bottleNeck = Integer.MAX_VALUE;
+
+			// find bottleneck
+			for (int i = 0; i < currentPath.size() - 1; i++) {
+				int currentWeight = residualGraph.getEdge(currentPath.get(i), currentPath.get(i + 1)).weight;
+				bottleNeck = Math.min(currentWeight, bottleNeck);
+
+			}
+
+			for (int i = 0; i < currentPath.size() - 1; i++) {
+				// substract bottleNeck from forward edges and add to backward edges
+				Edge backwardEdge = residualGraph.getEdge(currentPath.get(i + 1), currentPath.get(i));
+				Edge forwardEdge = residualGraph.getEdge(currentPath.get(i), currentPath.get(i + 1));
+
+				forwardEdge.weight -= bottleNeck;
+				backwardEdge.weight += bottleNeck;
+
+				if (forwardEdge.weight == 0) {
+					residualGraph.getEdges().remove(forwardEdge);
+				}
+			}
+
+			currentPath = pathDFS(source, destination, residualGraph);
+			maxFlow += bottleNeck;
+
+			// update residual graph
+		}
+
+		for (int i = 0; i < graph.getEdges().size() - 1; i++) {
+			Edge curEdge = residualGraph.getEdges().get(i);
+			int weight = residualGraph.getEdge(curEdge.nodes[0], curEdge.nodes[1]).weight;
+			int newWeight = graph.getEdges().get(i).weight - weight;
+			graph.setEdge(curEdge.nodes[0], curEdge.nodes[1], newWeight);
+		}
 
 		answer += maxFlow + "\n" + graph.toString();
 		return answer;
