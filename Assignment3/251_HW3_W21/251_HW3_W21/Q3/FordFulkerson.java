@@ -64,6 +64,7 @@ public class FordFulkerson {
 
 		// calculate path
 		ArrayList<Integer> currentPath = pathDFS(source, destination, residualGraph);
+		// System.out.println(currentPath.toString());
 		if (currentPath.size() == 0) {
 			maxFlow = -1;
 		}
@@ -78,6 +79,7 @@ public class FordFulkerson {
 				bottleNeck = Math.min(currentWeight, bottleNeck);
 
 			}
+			// System.out.println("BottleNeck: " + bottleNeck);
 
 			for (int i = 0; i < currentPath.size() - 1; i++) {
 				// substract bottleNeck from forward edges and add to backward edges
@@ -93,14 +95,27 @@ public class FordFulkerson {
 			}
 
 			currentPath = pathDFS(source, destination, residualGraph);
+			// System.out.println(currentPath.toString());
 			maxFlow += bottleNeck;
 
 			// update residual graph
 		}
 
-		for (int i = 0; i < graph.getEdges().size() - 1; i++) {
-			Edge curEdge = residualGraph.getEdges().get(i);
-			int weight = residualGraph.getEdge(curEdge.nodes[0], curEdge.nodes[1]).weight;
+		// System.out.println("Residual Graph");
+		// System.out.println(residualGraph.toString());
+		// System.out.println("==========");
+		// System.out.println("Old Graph");
+		// System.out.println(graph.toString());
+		// System.out.println("==========");
+
+		// System.out.println(graph.getEdges().toString());
+		for (int i = 0; i < graph.getEdges().size(); i++) {
+			Edge curEdge = graph.getEdges().get(i);
+			// System.out.println(curEdge.nodes[0] + "," + curEdge.nodes[1]);
+			int weight = 0;
+			if (residualGraph.getEdge(curEdge.nodes[0], curEdge.nodes[1]) != null) {
+				weight = residualGraph.getEdge(curEdge.nodes[0], curEdge.nodes[1]).weight;
+			}
 			int newWeight = graph.getEdges().get(i).weight - weight;
 			graph.setEdge(curEdge.nodes[0], curEdge.nodes[1], newWeight);
 		}
